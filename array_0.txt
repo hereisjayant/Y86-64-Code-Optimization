@@ -1,0 +1,36 @@
+# Provided test file. Array with 16 elements.
+
+.pos 0x2000
+array:          # Input to the max sub-array function
+    .quad 13
+    .quad -3
+    .quad -25
+    .quad -20
+    .quad -3
+    .quad -16
+    .quad -23
+    .quad 18
+    .quad 20
+    .quad -7
+    .quad 12
+    .quad -5
+    .quad -22
+    .quad 15
+    .quad -4
+    .quad 7
+arraySize:
+    .quad 16
+
+.pos 0x2500
+resultStart:    # These values are where the main function will save the result.
+    .quad 0
+resultEnd:
+    .quad 0
+resultSum:
+    .quad 0
+
+.pos 0x2600
+reference:        # In order to check for correctness, these values are compared against the result.
+     .quad 0x2038 # Address of index 7
+     .quad 0x2050 # Address of index 10
+     .quad 43     # Largest sum (indices 7-10: 18+20-7+12=43) 
