@@ -21,26 +21,29 @@ maxSubArray:
     pushq  %r14
     rmmovq %rdi, (%rdx)                # *sa_end = array;
     mrmovq (%rdi), %r13                # %r13 = array[0] = bestsum;
-    pushq  %r12
     subq   %rsi, %r9                   # arraySize - 1 to check if size of array is 1
+    pushq  %r12
+    
     jne    L1  
     jmp    L9                          # unconditional jump to L9
 L1:                      # line 10
     
-    pushq  %rbx    
-    rrmovq %rsi, %rbx                  # %rbx = %rsi = size
+   
+    
     rrmovq %rsi, %r9                   # %r9 = %rsi = size
     irmovq $8, %r8                     # %r8 = 8, long is 8 bytes
+    
+ 
+    pushq  %rbx    
+    irmovq $2, %r10                    # %r10 = 2
+    rrmovq %rsi, %rbx                  # %rbx = %rsi = size
+    mulq   %r8, %r9                    # %r9 = size * 8, calculating address of end of array
+   
     pushq  %rbp
     irmovq $8, %rbp                    # %rbp = 8, long is 8 bytes
-    irmovq $2, %r10                    # %r10 = 2
-    
-    mulq   %r8, %r9                    # %r9 = size * 8, calculating address of end of array
-    xorq   %rax, %rax                  # %rax = 0, sum = 0
-   
     divq   %r10, %rbx                  # long half = size >> 1; %rbx = half
     addq   %rdi, %r9                   # *end = array + size
-    
+    xorq   %rax, %rax                  # %rax = 0, sum = 0
     mulq   %rbx, %rbp                  # %rbp = half * 8, calculate displacement from base of array to mid
     irmovq $0x8000000000000000, %r10   # %r10 = LONG_MIN = leftsum
     
