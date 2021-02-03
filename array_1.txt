@@ -1,0 +1,23 @@
+# Array with 1 element
+
+.pos 0x2000
+array:
+    .quad 13
+
+arraySize:
+    .quad 1
+
+.pos 0x2500
+resultStart:
+    .quad 0
+resultEnd:
+    .quad 0
+resultSum:
+    .quad 0
+
+.pos 0x3000
+reference:        # In order to check for correctness, these values are compared against the result.
+     .quad 0x2000 # Address of index 0
+     .quad 0x2000 # Address of index 0
+     .quad 13     # Largest sum (13)
+

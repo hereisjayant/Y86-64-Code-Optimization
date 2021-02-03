@@ -1,8 +1,12 @@
-# Provided test file. Array with 16 elements.
+# Array with 30 elements.
 
 .pos 0x2000
 array:          # Input to the max sub-array function
+    .quad 0
+    .quad -4
+    .quad 7
     .quad 13
+    .quad 3
     .quad -3
     .quad -25
     .quad -20
@@ -11,16 +15,26 @@ array:          # Input to the max sub-array function
     .quad -23
     .quad 18
     .quad 20
-    .quad -7
+    .quad -8
     .quad 12
     .quad -5
     .quad -22
     .quad 15
     .quad -4
     .quad 7
+    .quad -22
+    .quad 15
+    .quad -4
+    .quad 7
+    .quad 0
+    .quad -3
+    .quad -25
+    .quad -20
+    .quad -3
+    .quad  0
 
 arraySize:
-    .quad 16
+    .quad 30
 
 .pos 0x2500
 resultStart:    # These values are where the main function will save the result.
@@ -32,6 +46,6 @@ resultSum:
 
 .pos 0x3000
 reference:        # In order to check for correctness, these values are compared against the result.
-     .quad 0x2038 # Address of index 7
-     .quad 0x2050 # Address of index 10
-     .quad 43     # Largest sum (indices 7-10: 18+20-7+12=43) 
+     .quad 0x2058 # Address of index 11
+     .quad 0x2070 # Address of index 14
+     .quad 42     # Largest sum (indices 11-14: 18+20-8+12=42) 
