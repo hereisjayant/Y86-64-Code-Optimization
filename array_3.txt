@@ -33,6 +33,6 @@ resultSum:
 
 .pos 0x3000
 reference:        # In order to check for correctness, these values are compared against the result.
-     .quad 0x2008 # Address of index 11
-     .quad 0x2078 # Address of index 14
+     .quad 0x2008 # Address of index 0
+     .quad 0x2078 # Address of index 16
      .quad 180     # Largest sum (indices 0-16: =180) 
