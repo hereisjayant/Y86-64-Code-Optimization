@@ -29,7 +29,7 @@ resultEnd:
 resultSum:
     .quad 0
 
-.pos 0x2600
+.pos 0x3000
 reference:        # In order to check for correctness, these values are compared against the result.
      .quad 0x2038 # Address of index 7
      .quad 0x2050 # Address of index 10
