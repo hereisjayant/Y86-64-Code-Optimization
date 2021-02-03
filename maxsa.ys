@@ -4,8 +4,8 @@ main:
     irmovq $array, %rdi                #store the address of the start of array in %rdi
     irmovq $arraySize, %rsi            #store the address which contains the size of the array in %rsi
     mrmovq (%rsi), %rsi                #store the size of the array in %rsi
-    irmovq $resultStart, %rdx          #store the address of the start of result (sa_start) in %rdx
-    irmovq $resultEnd, %rcx            #store the address of the end of result (sa_end) in %rdx
+    irmovq $resultStart, %rdx          #store the address of the start of result (&sa_start) in %rdx
+    irmovq $resultEnd, %rcx            #store the address of the end of result (&sa_end) in %rcx
     call   maxSubArray                 #invoke the maxSubArray function
     irmovq $resultSum, %r8             #store the address of the final result in %r8
     rmmovq %rax, (%r8)                 #store the value of final result in %rax, to be returned
@@ -76,40 +76,40 @@ L6:                      # line 24
 L7:
     addq   %r10, %r13                  # long bestsum = leftsum + rightsum; %r13 = bestsum
     rrmovq %rcx, %r14                  # %r14 = %rcx = &sa_end
-    rrmovq %rsi, %r9                   # %r9 = %rsi = size
+    rrmovq %rsi, %r9                   # %r9 = %rsi = size  (?)
     subq   %rbx, %r9                   # %r9 = size - half, %rbx = half (?)
     rrmovq %rdx, %r12                  # %r12 = %rdx = &sa_start
-    rrmovq %rbx, %rsi                  # %rsi = half
-    rrmovq %r9, %rbx                   # %rbx = size - half
-    pushq  %rdx                        # push &sa_start on stack
-    rrmovq %rsp, %rdx                  # %rdx = address of &sa_start on stack
-    pushq  %rcx                        # push &sa_end on stack
-    rrmovq %rsp, %rcx                  # %rcx = address of &sa_end on stack
+    rrmovq %rbx, %rsi                  # %rsi = half, 2nd argument
+    rrmovq %r9, %rbx                   # %rbx = size - half (?)
+    pushq  %rdx                        # declaring local variable, long *sub_start;
+    rrmovq %rsp, %rdx                  # %rdx = &sub_start 3rd arg
+    pushq  %rcx                        # declaring local variable, long *sub_end;
+    rrmovq %rsp, %rcx                  # %rcx = &sub_end 4th arg
     call   maxSubArray                 # maxsa(array, half, &sub_start, &sub_end);
-    popq   %rcx                        # pop %rcx = &sa_end
-    popq   %rdx                        # pop %rdx = &sa_start
+    popq   %rcx                        # pop %rcx = sub_end
+    popq   %rdx                        # pop %rdx = sub_start
     rrmovq %rax, %r9                   # %r9 = sum
     subq   %r13, %r9                   # sum - bestsum
     jle    L8                          # if !(sum > bestsum) jump to L8
     rrmovq %rax, %r13                  # if (sum > bestsum), bestsum = sum;
     rmmovq %rdx, (%r12)                # *sa_start = sub_start;
     rmmovq %rcx, (%r14)                # *sa_end = sub_end;
-L8:
-    rrmovq %rbp, %rdi
-    rrmovq %rbx, %rsi
-    pushq  %rdx
-    rrmovq %rsp, %rdx
-    pushq  %rcx
-    rrmovq %rsp, %rcx
-    call   maxSubArray
-    popq   %rcx
-    popq   %rdx
-    rrmovq %rax, %r9
-    subq   %r13, %r9
-    jle    L9
-    rrmovq %rax, %r13
-    rmmovq %rdx, (%r12)
-    rmmovq %rcx, (%r14)
+L8:                       # line 42
+    rrmovq %rbp, %rdi                  # %rdi = %rbp = mid, 1st arg 
+    rrmovq %rbx, %rsi                  # %rsi = %rbx = size - half, 2nd arg
+    pushq  %rdx                        # declaring local variable, long *sub_start;  
+    rrmovq %rsp, %rdx                  # %rdx = &sub_start 3rd arg 
+    pushq  %rcx                        # declaring local variable, long *sub_end; 
+    rrmovq %rsp, %rcx                  # %rcx = &sub_end 4th arg 
+    call   maxSubArray                 # maxsa(mid, size-half, &sub_start, &sub_end); 
+    popq   %rcx                        # pop %rcx = sub_end 
+    popq   %rdx                        # pop %rdx = sub_start 
+    rrmovq %rax, %r9                   # %r9 = sum 
+    subq   %r13, %r9                   # sum - bestsum 
+    jle    L9                          # if !(sum > bestsum) jump to L9 
+    rrmovq %rax, %r13                  # if (sum > bestsum), bestsum = sum; 
+    rmmovq %rdx, (%r12)                # *sa_start = sub_start; 
+    rmmovq %rcx, (%r14)                # *sa_end = sub_end; 
 L9:
     rrmovq %r13, %rax      # %rax = bestsum, return bestsum
     popq   %r14            # pop callee saved registers back from stack to the registers
@@ -150,10 +150,10 @@ resultSum:
     .quad 0
 
 .pos 0x3000
-reference:        # In order to check for correctness, these values are compared against the result.
-     .quad 0x2038 # Address of index 7
-     .quad 0x2050 # Address of index 10
-     .quad 43     # Largest sum (indices 7-10: 18+20-7+12=43)
+reference:             # In order to check for correctness, these values are compared against the result.
+     .quad 0x2038      # Address of index 7
+     .quad 0x2050      # Address of index 10
+     .quad 43          # Largest sum (indices 7-10: 18+20-7+12=43)
 
 .pos 0x4000
 stack:
