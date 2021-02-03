@@ -1,7 +1,7 @@
                       ,    SEQ,    PIPE-S,    PIPE-F,    PIPE-FBP
 cycles                ,   2097,      5495,      2696,        2428
 instructions          ,   2097,      2097,      2097,        2097
-cycles: reorder       ,      0,         0,         0,           0
-instructions: reorder ,      0,         0,         0,           0
+cycles: reorder       ,   2078,      4394,      2677,        2409
+instructions: reorder ,   2078,      2078,      2078,        2078
 cycles: optimal       ,      0,         0,         0,           0
 instructions: optimal ,      0,         0,         0,           0
