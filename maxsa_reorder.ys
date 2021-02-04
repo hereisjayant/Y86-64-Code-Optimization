@@ -13,32 +13,32 @@ main:
 
 .pos 0x1000
 maxSubArray:
-
+    
                       # %r9 = 1
     pushq  %r13
-    irmovq $1, %r9
-    rmmovq %rdi, (%rcx)                # *sa_start = array;
+    irmovq $1, %r9 
+    rmmovq %rdi, (%rcx)                # *sa_start = array;  
     pushq  %r14
     rmmovq %rdi, (%rdx)                # *sa_end = array;
     mrmovq (%rdi), %r13                # %r13 = array[0] = bestsum;
     subq   %rsi, %r9                   # arraySize - 1 to check if size of array is 1
     pushq  %r12
-
-    jne    L1
+    
+    jne    L1  
     jmp    L9                          # unconditional jump to L9
 L1:                      # line 10
-
-
-
+    
+   
+    
     rrmovq %rsi, %r9                   # %r9 = %rsi = size
     irmovq $8, %r8                     # %r8 = 8, long is 8 bytes
-
-
-    pushq  %rbx
+    
+ 
+    pushq  %rbx    
     irmovq $2, %r10                    # %r10 = 2
     rrmovq %rsi, %rbx                  # %rbx = %rsi = size
     mulq   %r8, %r9                    # %r9 = size * 8, calculating address of end of array
-
+   
     pushq  %rbp
     irmovq $8, %rbp                    # %rbp = 8, long is 8 bytes
     divq   %r10, %rbx                  # long half = size >> 1; %rbx = half
@@ -46,14 +46,14 @@ L1:                      # line 10
     xorq   %rax, %rax                  # %rax = 0, sum = 0
     mulq   %rbx, %rbp                  # %rbp = half * 8, calculate displacement from base of array to mid
     irmovq $0x8000000000000000, %r10   # %r10 = LONG_MIN = leftsum
-
+    
     addq   %rdi, %rbp                  # %rbp = long *mid = array + half
     subq   %r8, %r9                    # %r9 = *end = array + size - 1; sub 8 since long is 8 bytes
 
-
+  
 
     rrmovq %rbp, %r11                  # %r11 = %rbp = mid
-    subq   %r8, %r11                   # %r11 = ptr = mid - 1
+L3: subq   %r8, %r11                   # %r11 = ptr = mid - 1
 L2:                      # line 16
     rrmovq %r11, %r12                  # %r12 = %r11 = ptr
     subq   %rdi, %r12                  # ptr - array, checking the condition ptr >= array;
@@ -65,11 +65,11 @@ L2:                      # line 16
     jle    L3                          # if !(sum > leftsum) jump to L3
     rrmovq %rax, %r10                  # if (sum > leftsum), leftsum = sum
     rmmovq %r11, (%rdx)                # *sa_start = ptr;
-L3:                      # line 16
-    subq   %r8, %r11                   # ptr--, sub 8 since long is 8 bytes
-    jmp    L2                          # loop back to L2
+                      # line 16
+    # subq   %r8, %r11                   # ptr--, sub 8 since long is 8 bytes
+    # jmp    L2                          # loop back to L2
 L4:                      # line 24
-
+   
     rrmovq %rbp, %r11                  # %r11 = %rbp = mid, ptr = mid
     irmovq $0x8000000000000000, %r13   # %r13 = rightsum = LONG_MIN
     xorq   %rax, %rax                  # %rax = 0, sum = 0
@@ -88,104 +88,103 @@ L6:                      # line 24
     addq   %r8, %r11                   # ptr++, add 8 since long is 8 bytes
     jmp    L5                          # loop back to L5
 L7:
-
+    
     rrmovq %rsi, %r9                   # %r9 = %rsi = size  (?)
-
-
+    
+   
     rrmovq %rdx, %r12                  # %r12 = %rdx = &sa_start
     pushq  %rdx                        # declaring local variable, long *sub_start;
      rrmovq %rcx, %r14                  # %r14 = %rcx = &sa_end
     rrmovq %rbx, %rsi                  # %rsi = half, 2nd argument
     subq   %rbx, %r9                   # %r9 = size - half, %rbx = half (?)
-
+    
     rrmovq %rsp, %rdx                  # %rdx = &sub_start 3rd arg
     pushq  %rcx                        # declaring local variable, long *sub_end;
-
+    
     addq   %r10, %r13                  # long bestsum = leftsum + rightsum; %r13 = bestsum
     rrmovq %r9, %rbx                   # %rbx = size - half (?)
     rrmovq %rsp, %rcx                  # %rcx = &sub_end 4th arg
-
+   
     call   maxSubArray                 # maxsa(array, half, &sub_start, &sub_end);
 
     rrmovq %rax, %r9                   # %r9 = sum
     popq   %rcx                        # pop %rcx = sub_end
     popq   %rdx                        # pop %rdx = sub_start
     subq   %r13, %r9                   # sum - bestsum
-
+    
     jle    L8                          # if !(sum > bestsum) jump to L8
     rrmovq %rax, %r13                  # if (sum > bestsum), bestsum = sum;
     rmmovq %rdx, (%r12)                # *sa_start = sub_start;
     rmmovq %rcx, (%r14)                # *sa_end = sub_end;
 L8:                       # line 42
-
-    pushq  %rdx                        # declaring local variable, long *sub_start;
-    rrmovq %rbp, %rdi                  # %rdi = %rbp = mid, 1st arg
+   
+    pushq  %rdx                        # declaring local variable, long *sub_start;  
+    rrmovq %rbp, %rdi                  # %rdi = %rbp = mid, 1st arg 
     rrmovq %rbx, %rsi                  # %rsi = %rbx = size - half, 2nd arg
-    rrmovq %rsp, %rdx                  # %rdx = &sub_start 3rd arg
-    pushq  %rcx                        # declaring local variable, long *sub_end;
-    rrmovq %rsp, %rcx                  # %rcx = &sub_end 4th arg
-    call   maxSubArray                 # maxsa(mid, size-half, &sub_start, &sub_end);
+    rrmovq %rsp, %rdx                  # %rdx = &sub_start 3rd arg 
+    pushq  %rcx                        # declaring local variable, long *sub_end; 
+    rrmovq %rsp, %rcx                  # %rcx = &sub_end 4th arg 
+    call   maxSubArray                 # maxsa(mid, size-half, &sub_start, &sub_end); 
 
-    rrmovq %rax, %r9                   # %r9 = sum
-    popq   %rcx                        # pop %rcx = sub_end
-    popq   %rdx
-    popq   %rbp                    # pop %rdx = sub_start
-    subq   %r13, %r9                   # sum - bestsum
-    popq   %rbx
-    jle    L9                          # if !(sum > bestsum) jump to L9
-    rrmovq %rax, %r13                  # if (sum > bestsum), bestsum = sum;
-    rmmovq %rdx, (%r12)                # *sa_start = sub_start;
-    rmmovq %rcx, (%r14)                # *sa_end = sub_end;
+    rrmovq %rax, %r9                   # %r9 = sum 
+    popq   %rcx                        # pop %rcx = sub_end 
+    popq   %rdx    
+    popq   %rbp                    # pop %rdx = sub_start 
+    subq   %r13, %r9                   # sum - bestsum 
+    popq   %rbx  
+    jle    L9                          # if !(sum > bestsum) jump to L9 
+    rrmovq %rax, %r13                  # if (sum > bestsum), bestsum = sum; 
+    rmmovq %rdx, (%r12)                # *sa_start = sub_start; 
+    rmmovq %rcx, (%r14)                # *sa_end = sub_end; 
 
-
+    
              # pop callee saved registers back from stack to the registers
-
-
-
+    
+   
+    
 
 L9:
     popq   %r12
-    popq   %r14
+    popq   %r14 
     rrmovq %r13, %rax      # %rax = bestsum, return bestsum
     popq   %r13
     ret                    # return to next line from where function was called
 
 
-    .pos 0x2000
+.pos 0x2000
+array:
+    .quad 13
+    .quad -3
+    .quad -25
+    .quad -20
+    .quad -3
+    .quad -16
+    .quad -23
+    .quad 18
+    .quad 20
+    .quad -7
+    .quad 12
+    .quad -5
+    .quad -22
+    .quad 15
+    .quad -4
+    .quad 7
+arraySize:
+    .quad 16
 
-    array:          # Input to the max sub-array function
-          .quad -50
-          .quad -43
-          .quad -40
-          .quad -36
-          .quad -33
-          .quad -31
-          .quad 1
-          .quad 3
-          .quad 14
-          .quad 19
-          .quad 21
-          .quad 25
-          .quad 66
-          .quad 122       # Input to the max sub-array function
+.pos 0x2500
+resultStart:
+    .quad 0
+resultEnd:
+    .quad 0
+resultSum:
+    .quad 0
 
-    arraySize:
-        .quad 14
-
-    .pos 0x2500
-    resultStart:    # These values are where the main function will save the result.
-        .quad 0
-    resultEnd:
-        .quad 0
-    resultSum:
-        .quad 0
-
-    .pos 0x3000
-    reference:        # In order to check for correctness, these values are compared against the result.
-         .quad 0x2030 # Address of index 8
-         .quad 0x2068 # Address of index 16
-         .quad 271     # Largest sum (index 8-16: =271)
-
+.pos 0x3000
+reference:             # In order to check for correctness, these values are compared against the result.
+     .quad 0x2038      # Address of index 7
+     .quad 0x2050      # Address of index 10
+     .quad 43          # Largest sum (indices 7-10: 18+20-7+12=43)
 
 .pos 0x4000
 stack:
