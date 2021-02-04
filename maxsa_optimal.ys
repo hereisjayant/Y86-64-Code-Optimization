@@ -12,6 +12,8 @@ main:
     halt
 
 
+
+
 .pos 0x1000
 maxSubArray:
     
@@ -20,7 +22,7 @@ maxSubArray:
     irmovq $1, %r9 
     rmmovq %rdi, (%rcx)                # *sa_start = array;  
     rmmovq %rdi, (%rdx)                # *sa_end = array;
-    mrmovq (%rdi), %r13                # %r13 = array[0] = bestsum;
+    mrmovq (%rdi), %rax                # %r13 = array[0] = bestsum;
     subq   %rsi, %r9                   # arraySize - 1 to check if size of array is 1 
     je    L9          
                     # unconditional jump to L9
@@ -48,34 +50,35 @@ L1:                      # line 10
   
 
     rrmovq %rbp, %r11                  # %r11 = %rbp = mid
-    subq   %r8, %r11                   # %r11 = ptr = mid - 1
+
+L3:    subq   %r8, %r11                   # %r11 = ptr = mid - 1
 L2:                      # line 16
-    rrmovq %r11, %r12                  # %r12 = %r11 = ptr
-    subq   %rdi, %r12                  # ptr - array, checking the condition ptr >= array;
+    rrmovq %r11, %rbx                  # %rbx = %r11 = ptr
+    subq   %rdi, %rbx                  # ptr - array, checking the condition ptr >= array;
     jl     L4                          # if ptr < array, jump to L4
-    mrmovq (%r11), %r12                # %r12 = *ptr
-    addq   %r12, %rax                  # %rax += %12, sum += *ptr
-    rrmovq %rax, %r12                  # %r12 = sum
-    subq   %r10, %r12                  # sum - leftsum, comparing sum and leftsum
+    mrmovq (%r11), %rbx                # %rbx = *ptr
+    addq   %rbx, %rax                  # %rax += %12, sum += *ptr
+    rrmovq %rax, %rbx                  # %rbx = sum
+    subq   %r10, %rbx                  # sum - leftsum, comparing sum and leftsum
     jle    L3                          # if !(sum > leftsum) jump to L3
     rrmovq %rax, %r10                  # if (sum > leftsum), leftsum = sum
     rmmovq %r11, (%rdx)                # *sa_start = ptr;
-L3:                      # line 16
-    subq   %r8, %r11                   # ptr--, sub 8 since long is 8 bytes
-    jmp    L2                          # loop back to L2
+# L3:                      # line 16
+#     subq   %r8, %r11                   # ptr--, sub 8 since long is 8 bytes
+#     jmp    L2                          # loop back to L2
 L4:                      # line 24
    
     rrmovq %rbp, %r11                  # %r11 = %rbp = mid, ptr = mid
     irmovq $0x8000000000000000, %r13   # %r13 = rightsum = LONG_MIN
     xorq   %rax, %rax                  # %rax = 0, sum = 0
 L5:                      # line 24
-    rrmovq %r11, %r12                  # %r12 = %r11 = ptr
-    subq   %r9, %r12                   # ptr - end, checking the condition ptr <= end;
+    rrmovq %r11, %rbx                  # %rbx = %r11 = ptr
+    subq   %r9, %rbx                   # ptr - end, checking the condition ptr <= end;
     jg     L7                          # if ptr > end, jump to L7
-    mrmovq (%r11), %r12                # %r12 = *ptr
-    addq   %r12, %rax                  # %rax += %12, sum += *ptr
-    rrmovq %rax, %r12                  # %r12 = sum
-    subq   %r13, %r12                  # sum - rightsum, comparing sum and rightsum
+    mrmovq (%r11), %rbx                # %rbx = *ptr
+    addq   %rbx, %rax                  # %rax += %12, sum += *ptr
+    rrmovq %rax, %rbx                  # %rbx = sum
+    subq   %r13, %rbx                  # sum - rightsum, comparing sum and rightsum
     jle    L6                          # if !(sum > leftsum) jump to L6
     rrmovq %rax, %r13                  # if (sum > leftsum), rightsum = sum
     rmmovq %r11, (%rcx)                # *sa_end = ptr;
@@ -84,10 +87,13 @@ L6:                      # line 24
     jmp    L5                          # loop back to L5
 L7:
     
-    rrmovq %rsi, %r9                   # %r9 = %rsi = size  (?)
-    
    
-    rrmovq %rdx, %r11                # %r12 = %rdx = &sa_start
+    rrmovq %rsi, %rbx               #optimize
+    irmovq $2, %r9                   
+    divq %r9, %rbx
+    rrmovq %rsi, %r9                   
+   
+    rrmovq %rdx, %r11                # %rbx = %rdx = &sa_start
     pushq  %rdx                        # declaring local variable, long *sub_start;
      rrmovq %rcx, %r8                # %r14 = %rcx = &sa_end
     rrmovq %rbx, %rsi                  # %rsi = half, 2nd argument
@@ -126,9 +132,10 @@ L8:                       # line 42
     popq   %rdx    
     popq   %rbp                    # pop %rdx = sub_start 
     subq   %r13, %r9                   # sum - bestsum 
+    rrmovq %r13, %rax
     popq   %rbx  
     jle    L9                          # if !(sum > bestsum) jump to L9 
-    rrmovq %rax, %r13                  # if (sum > bestsum), bestsum = sum; 
+    #rrmovq %rax, %r13                  # if (sum > bestsum), bestsum = sum; 
     rmmovq %rdx, (%r11)                # *sa_start = sub_start; 
     rmmovq %rcx, (%r8)                # *sa_end = sub_end; 
 
@@ -139,7 +146,7 @@ L8:                       # line 42
     
 
 L9:
-    rrmovq %r13, %rax      # %rax = bestsum, return bestsum
+          # %rax = bestsum, return bestsum
     popq   %r13
     ret                    # return to next line from where function was called
 
