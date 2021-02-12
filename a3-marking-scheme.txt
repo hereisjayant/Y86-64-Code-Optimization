@@ -1,0 +1,91 @@
+*** Grade before late penalty: [/61]
+
+
+[/10] Part 1: Commented maxsa.ys file
+-------------------------
+
+The code can be divided into the following sections.  In order to get
+full marks for a section, the comments written should indicate an
+understanding of what the instructions do and how they relate to the C
+code. The sections are:
+
+    [/1] Calling maxSubArray in main (including its setup).
+
+    [/1] Saving registers and checking for base case (array with one
+         element).
+
+    [/2] L1/L2/L3: initialization and first loop (left side).
+
+    [/2] L4/L5/L6: second loop (right side).
+
+    [/3] L7/L8: recursive calls.
+
+    [/1] L9: restoring registers and return.
+
+
+[/10] Part 2: Performance evaluation
+------------------------------------
+
+    [/3] Correctly evaluated the code on the original array.
+
+    [/7] Provided at least 5 additional arrays and reported evaluations
+    
+    	[/1] Includes at least one "regular", random array with around
+	     the same size as the original (16 elements).
+	     
+        [/1] Includes at least one very small array (one or two
+             elements).
+	
+        [/1] Includes at least one very large array (at least 32
+             elements).
+	
+        [/1] Includes at least one array with all positive or all
+             negative values (may be same as one of the above).
+	
+        [/1] Includes at least one array with a zero or with more than
+             one possible result (may be same as one of the above).
+
+        [/2] Properly provides evaluations for all cases above.
+
+
+[/40] Part 3: Code Optimization
+------------------------------------
+
+For evaluating the code performance in this part, we consider the
+average of 10 test cases.
+
+    [/15] Part i: maxsa_reorder.ys
+        [/6] Runs at least 20% faster on PIPE with stalling
+        [/4] Runs at close to the same speed on Sequential and
+             PIPE with D.F.+Branch Prediction
+	[/5] Lists results of maxsa_reorder for provided arrays
+	     (1 point for each listed test, up to 5 tests)
+
+	     Additional penalties:
+	     [/-15] Uses any instruction not existent in the original file
+	     [/-5]  Provided code incorrect in some cases
+	     [/-15] Provided code incorrect in most cases
+	     [/-??] Additional penalties at marker's discretion
+
+    [/25] Part ii: maxsa_optimal.ys
+        [/7] Runs at least 35% faster on PIPE with stalling
+        [/7] Runs at least 15% faster on
+             PIPE with D.F.+Branch Prediction
+        [/6] Runs close to the same speed on Sequential
+	[/5] Lists results of maxsa_optimal for provided arrays
+	     (1 point for each listed test, up to 5 tests)
+
+	     Additional penalties:
+	     [/-4] Uses a callee-saved register without saving its value in stack
+	     [/-10] Changes the order or meaning of arguments
+	     [/-10] Provided code incorrect in some cases
+	     [/-25] Provided code incorrect in most cases
+	     [/-25] Uses a different algorithm instead of divide-and-conquer
+	     [/-??] Additional penalties at marker's discretion
+
+
+--------------------
+
+[/1] Filled in Cover Page
+
+--------------------
