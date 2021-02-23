@@ -1,4 +1,5 @@
 *** Grade before late penalty: [19/61]
+    ***Total after 0.31% late penalty is 18.94
 
 
 [9/10] Part 1: Commented maxsa.ys file
@@ -89,3 +90,4 @@ average of 10 test cases.
 [1/1] Filled in Cover Page
 
 --------------------
+
